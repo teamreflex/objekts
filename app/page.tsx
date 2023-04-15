@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
-import { Separator } from "@/components/ui/separator";
 import AddressInput from "@/components/address-input";
 
 export const metadata: Metadata = {
