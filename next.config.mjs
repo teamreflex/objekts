@@ -4,6 +4,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  images: {
+    domains: ['imagedelivery.net'],
+  },
 }
 
 export default nextConfig

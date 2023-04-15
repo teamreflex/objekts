@@ -1,5 +1,5 @@
 {
-  "name": "next-template",
+  "name": "objekts",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -41,6 +41,7 @@
     "@radix-ui/react-toggle": "^1.0.2",
     "@radix-ui/react-toggle-group": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.5",
+    "alchemy-sdk": "^2.8.0",
     "class-variance-authority": "^0.5.2",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
