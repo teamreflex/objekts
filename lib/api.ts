@@ -1,5 +1,5 @@
 import { Artist, AvailableArtist, Objekt, artists } from "@/types/api";
-import { Alchemy, Network } from "alchemy-sdk";
+import { Alchemy, Network, NftOrdering } from "alchemy-sdk";
 
 function client() {
   return new Alchemy({
@@ -16,6 +16,7 @@ export function getArtist(artistString: Artist) {
 export async function fetchNFTs(artist: AvailableArtist, wallet: string): Promise<Objekt[]> {
   const nfts = await client().nft.getNftsForOwner(wallet, {
     contractAddresses: [artist.contractAddress],
+    orderBy: NftOrdering.TRANSFERTIME
   });
 
   return nfts.ownedNfts.map(nft => ({

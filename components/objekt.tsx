@@ -19,7 +19,7 @@ export default function Objekt({ frontImage, backImage, class: className, member
       <div className="grid grid-cols-1 grid-rows-3 lg:grid-cols-2 lg:grid-rows-2">
         <p className="font-bold">{memberName} {collection}</p>
         <p className="flex font-semibold lg:justify-end">{className}</p>
-        <p>#{num}</p>
+        <p>#{num} ({tokenId})</p>
       </div>
     </div>
   )
