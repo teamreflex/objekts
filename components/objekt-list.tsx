@@ -48,10 +48,10 @@ export default function ObjektList({ initialObjekts }: { initialObjekts: RemoteO
   }
 
   return <>
-    <div className="flex flex-row justify-between">
-      <div className="font-bold">{objekts.length} Objekts</div>
+    <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
+      <div className="text-center font-bold lg:text-left">{objekts.length} Objekts</div>
 
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row justify-center gap-2 lg:justify-end">
         {/* sort */}
         <Select defaultValue="newest" onValueChange={e => onFilterChange(filter, e)}>
           <SelectTrigger className="w-[180px]">
