@@ -4,7 +4,6 @@ import ObjektList from "@/components/objekt-list";
 import { siteConfig } from "@/config/site";
 import { fetchNFTs, getArtist } from "@/lib/api";
 import { Artist } from "@/types/api";
-import { Metadata } from "next";
 
 type Params = {
   artist: Artist;
@@ -50,11 +49,11 @@ export default async function Page({ params }: { params: Params }) {
     return <ComingSoon artist={artist} />
   }
 
-  const nfts = await fetchNFTs(artist, params.address);
+  const { objekts, pageKey, totalCount } = await fetchNFTs(artist, params.address);
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-      <ObjektList initialObjekts={nfts} />
+      <ObjektList initialObjekts={objekts} initialPageKey={pageKey} totalCount={totalCount} artist={params.artist} address={params.address} />
     </section>
   )
 }

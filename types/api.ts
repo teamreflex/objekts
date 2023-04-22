@@ -29,3 +29,9 @@ export type Objekt = {
   num: number
   tokenId: number
 }
+
+export type ObjektResponse = {
+  objekts: Objekt[]
+  pageKey: string | undefined
+  totalCount: number
+}

@@ -1,7 +1,7 @@
 'use client'
 
-import { Objekt as RemoteObjekt } from "@/types/api";
-import { useState } from "react";
+import { Artist, Objekt as RemoteObjekt } from "@/types/api";
+import { useEffect, useState } from "react";
 import Objekt from "@/components/objekt";
 import {
   Select,
@@ -9,7 +9,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+type ObjektListProps = {
+  initialObjekts: RemoteObjekt[]
+  initialPageKey: string | undefined
+  totalCount: number
+  artist: Artist
+  address: string
+}
 
 function filterObjekts(objekts: RemoteObjekt[], filter: string) {
   switch (filter) {
@@ -33,24 +42,42 @@ function sortObjekts(objekts: RemoteObjekt[], sort: string) {
   }
 }
 
-export default function ObjektList({ initialObjekts }: { initialObjekts: RemoteObjekt[] }) {
+export default function ObjektList({ initialObjekts, initialPageKey, totalCount, artist, address }: ObjektListProps) {
   const [filter, setFilter] = useState<string>('all');
   const [sort, setSort] = useState<string>('newest');
   const [objekts, setObjekts] = useState<RemoteObjekt[]>(initialObjekts.sort((a, b) => b.tokenId - a.tokenId));
+  const [filteredObjekts, setFilteredObjekts] = useState<RemoteObjekt[]>(objekts);
+  const [pageKey, setPageKey] = useState<string | undefined>(initialPageKey);
+
+  useEffect(() => {
+    function executeFilter(newObjekts: RemoteObjekt[]) {
+      const sorted = sortObjekts(newObjekts, sort);
+      return filterObjekts(sorted, filter);
+    }
+
+    setFilteredObjekts(executeFilter(objekts));
+  }, [filter, sort, objekts])
+
 
   function onFilterChange(filter: string, sort: string) {
     setFilter(filter);
     setSort(sort);
+  }
 
-    const sorted = sortObjekts(initialObjekts, sort);
-    const filtered = filterObjekts(sorted, filter);
-    setObjekts(filtered);
+  async function fetchMore() {
+    const res = await fetch(`/${artist}/${address}/${pageKey ?? ''}`);
+    if (res.ok) {
+      const { objekts: newObjekts, pageKey } = await res.json();
+      setObjekts([...objekts, ...newObjekts]);
+      setPageKey(pageKey);
+    }
   }
 
   return <>
     <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
-      <div className="text-center font-bold lg:text-left">{objekts.length} Objekts</div>
+      <div className="text-center font-bold lg:text-left">{totalCount} Objekts</div>
 
+      {/* sort and filter */}
       <div className="flex flex-row justify-center gap-2 lg:justify-end">
         {/* sort */}
         <Select defaultValue="newest" onValueChange={e => onFilterChange(filter, e)}>
@@ -76,8 +103,16 @@ export default function ObjektList({ initialObjekts }: { initialObjekts: RemoteO
         </Select>
       </div>
     </div>
-    <div className="grid grid-cols-2 items-center gap-2 lg:grid-cols-4">
-      {objekts.map((objekt) => <Objekt key={objekt.tokenId} {...objekt} />)}
-    </div>
+
+    {/* display */}
+    <InfiniteScroll
+      className="grid grid-cols-2 items-center gap-2 lg:grid-cols-4"
+      dataLength={filteredObjekts.length}
+      next={fetchMore}
+      hasMore={pageKey !== undefined}
+      loader={<h4>Loading...</h4>}
+    >
+      {filteredObjekts.map((objekt) => <Objekt key={objekt.tokenId} {...objekt} />)}
+    </InfiniteScroll>
   </>
 }

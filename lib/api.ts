@@ -1,4 +1,4 @@
-import { Artist, AvailableArtist, Objekt, artists } from "@/types/api";
+import { Artist, AvailableArtist, Objekt, ObjektResponse, artists } from "@/types/api";
 import { Alchemy, Network, NftOrdering } from "alchemy-sdk";
 
 function client() {
@@ -13,13 +13,14 @@ export function getArtist(artistString: Artist) {
   return entries.find(([key]) => key === artistString)?.[1];
 }
 
-export async function fetchNFTs(artist: AvailableArtist, wallet: string): Promise<Objekt[]> {
+export async function fetchNFTs(artist: AvailableArtist, wallet: string, pageKey?: string): Promise<ObjektResponse> {
   const nfts = await client().nft.getNftsForOwner(wallet, {
     contractAddresses: [artist.contractAddress],
-    orderBy: NftOrdering.TRANSFERTIME
+    orderBy: NftOrdering.TRANSFERTIME,
+    pageKey: pageKey,
   });
 
-  return nfts.ownedNfts.map(nft => ({
+  const objekts = nfts.ownedNfts.map(nft => ({
     frontImage: nft.rawMetadata?.objekt.frontImage as string,
     backImage: nft.rawMetadata?.objekt.backImage as string,
     class: nft.rawMetadata?.objekt.class as string,
@@ -28,5 +29,11 @@ export async function fetchNFTs(artist: AvailableArtist, wallet: string): Promis
     collection: nft.rawMetadata?.objekt.collectionNo as string,
     num: nft.rawMetadata?.objekt.objektNo as number,
     tokenId: Number(nft.rawMetadata?.objekt.tokenId),
-  }))
+  }));
+
+  return {
+    objekts,
+    pageKey: nfts.pageKey,
+    totalCount: nfts.totalCount,
+  }
 }
