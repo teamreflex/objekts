@@ -9,7 +9,6 @@ type Context = {
 }
 
 export async function GET(request: NextRequest, context: { params: Context }) {
-  console.log(context)
   const artist = getArtist(context.params.artist)
   if (!artist) return NextResponse.json({ error: 'Artist not found' })
 
