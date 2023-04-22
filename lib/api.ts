@@ -20,16 +20,18 @@ export async function fetchNFTs(artist: AvailableArtist, wallet: string, pageKey
     pageKey: pageKey,
   });
 
-  const objekts = nfts.ownedNfts.map(nft => ({
-    frontImage: nft.rawMetadata?.objekt.frontImage as string,
-    backImage: nft.rawMetadata?.objekt.backImage as string,
-    class: nft.rawMetadata?.objekt.class as string,
-    memberName: nft.rawMetadata?.objekt.member as string,
-    season: nft.rawMetadata?.objekt.season as string,
-    collection: nft.rawMetadata?.objekt.collectionNo as string,
-    num: nft.rawMetadata?.objekt.objektNo as number,
-    tokenId: Number(nft.rawMetadata?.objekt.tokenId),
-  }));
+  const objekts = nfts.ownedNfts
+    .filter(nft => nft.rawMetadata?.objekt !== undefined)
+    .map(nft => ({
+      frontImage: nft.rawMetadata?.objekt.frontImage,
+      backImage: nft.rawMetadata?.objekt.backImage as string,
+      class: nft.rawMetadata?.objekt.class as string,
+      memberName: nft.rawMetadata?.objekt.member as string,
+      season: nft.rawMetadata?.objekt.season as string,
+      collection: nft.rawMetadata?.objekt.collectionNo as string,
+      num: nft.rawMetadata?.objekt.objektNo as number,
+      tokenId: Number(nft.rawMetadata?.objekt.tokenId),
+    }));
 
   return {
     objekts,
