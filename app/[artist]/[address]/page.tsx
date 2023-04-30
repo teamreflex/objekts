@@ -1,8 +1,9 @@
 import ComingSoon from "@/components/coming-soon";
+import InvalidAddress from "@/components/invalid-address";
 import InvalidArtist from "@/components/invalid-artist";
 import ObjektList from "@/components/objekt-list";
 import { siteConfig } from "@/config/site";
-import { fetchNFTs, getArtist } from "@/lib/api";
+import { fetchNFTs, getArtist, searchUser } from "@/lib/api";
 import { Artist } from "@/types/api";
 
 type Params = {
@@ -49,7 +50,16 @@ export default async function Page({ params }: { params: Params }) {
     return <ComingSoon artist={artist} />
   }
 
-  const { objekts, pageKey, totalCount } = await fetchNFTs(artist, params.address);
+  let address = params.address;
+  if (/^0x[a-fA-F0-9]{40}$/g.test(address) === false) {
+    try {
+      address = await searchUser(address)
+    } catch (e) {
+      return <InvalidAddress />
+    }
+  }
+
+  const { objekts, pageKey, totalCount } = await fetchNFTs(artist, address);
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
