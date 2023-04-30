@@ -15,7 +15,7 @@ export default function Objekt({ frontImage, backImage, class: className, member
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <Image onLoadingComplete={() => setLoading(false)} className={loading ? 'blur-sm' : ''} onClick={() => toggleImage()} src={image} width={300} height={300} alt={`${memberName} ${collection} ${num}`} />
+      <Image unoptimized onLoadingComplete={() => setLoading(false)} className={loading ? 'blur-sm' : ''} onClick={() => toggleImage()} src={image} width={300} height={300} alt={`${memberName} ${collection} ${num}`} />
       <div className="grid grid-cols-1 grid-rows-3 lg:grid-cols-2 lg:grid-rows-2">
         <p className="font-bold">{memberName} {collection}</p>
         <p className="flex font-semibold lg:justify-end">{className}</p>
