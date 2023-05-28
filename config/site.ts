@@ -22,6 +22,6 @@ export const siteConfig: SiteConfig = {
   ],
   links: {
     twitter: "https://twitter.com/rfxkairu",
-    github: "https://github.com/teamreflex/objekts",
+    github: "https://github.com/teamreflex/objekts-react",
   },
 }
