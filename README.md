@@ -2,6 +2,8 @@
 
 View Modhaus (tripleS & ARTMS) objekts outside the app.
 
+[A SvelteKit version replaces this repository.](https://github.com/teamreflex/objekts-svelte)
+
 ## Tooling
 
 - Next.js 13 App Router
